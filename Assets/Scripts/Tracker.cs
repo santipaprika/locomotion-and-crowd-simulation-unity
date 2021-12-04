@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Tracker : MonoBehaviour
 {
-    private float speedX = 0;
-    private float speedZ = 0;
     private Vector3 prevPosition;
+    private Vector3 displacement;
+    private Vector3 speed;
+    private Vector3 localSpeed;
+    private Vector3 forward;
 
     // Start is called before the first frame update
     void Start()
@@ -15,20 +17,40 @@ public class Tracker : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        Vector3 speed = (gameObject.transform.position - prevPosition) / Time.deltaTime;
-        speedX = speed.x;
-        speedZ = speed.z;
+        displacement = gameObject.transform.position - prevPosition;
+        speed = displacement / Time.deltaTime;
+        localSpeed = transform.worldToLocalMatrix.MultiplyVector(speed);
+        
+        if (Mathf.Abs(speed.magnitude) > 0.00001f)
+            forward = speed.normalized;
+
         prevPosition = gameObject.transform.position;
     }
 
     public float getSpeedX() {
-        return speedX;
+        return localSpeed.x;
     }
 
     
     public float getSpeedZ() {
-        return speedZ;
+        return localSpeed.z;
     }
+
+    public Vector2 getSpeedXZ() {
+        return new Vector2(localSpeed.x, localSpeed.z);
+    }
+
+    public Vector3 getForward() {
+        return forward;
+    }
+
+    void OnDrawGizmos() {
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawLine(gameObject.transform.position, gameObject.transform.position + speed / 10f);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(gameObject.transform.position, gameObject.transform.position + forward * speed.magnitude / 5f);
+    }
 }

@@ -4,24 +4,28 @@ using UnityEngine;
 
 public class Locomotion : MonoBehaviour
 {
-    private Animator animator;
-    private Tracker tracker;
-    private float prevSpeedX;
-    private float prevSpeedZ;
+    private Animator _animator;
+    private Tracker _tracker;
+    private Vector2 _prevSpeedXZ;
+    private Vector2 _currSpeedXZ;
+    public float _interpolationSpeedFactor = 0.05f;
+    public float _interpolationOrientationFactor = 0.2f;
 
     // Start is called before the first frame update
     void Start()
     {
-        animator = gameObject.GetComponent<Animator>();
-        tracker = gameObject.GetComponent<Tracker>();
-        prevSpeedX = tracker.getSpeedX();
-        prevSpeedZ = tracker.getSpeedZ();
+        _animator = gameObject.GetComponent<Animator>();
+        _tracker = gameObject.GetComponent<Tracker>();
+        _prevSpeedXZ = _tracker.getSpeedXZ();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        animator.SetFloat("Speed X", (prevSpeedX + tracker.getSpeedX()) / 2.0f);   
-        animator.SetFloat("Speed Z", (prevSpeedZ + tracker.getSpeedZ()) / 2.0f);   
+        _currSpeedXZ = Vector2.Lerp(_currSpeedXZ, _tracker.getSpeedXZ(), _interpolationSpeedFactor);
+        _animator.SetFloat("Speed X", _currSpeedXZ.x);   
+        _animator.SetFloat("Speed Z", _currSpeedXZ.y);
+
+        transform.forward = Vector3.Lerp(transform.forward, _tracker.getForward(), _interpolationOrientationFactor);
     }
 }
