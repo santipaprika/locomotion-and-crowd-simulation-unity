@@ -9,6 +9,7 @@ public class Tracker : MonoBehaviour
     private Vector3 speed;
     private Vector3 localSpeed;
     private Vector3 forward;
+    private float eulerY;
 
     // Start is called before the first frame update
     void Start()
@@ -22,9 +23,15 @@ public class Tracker : MonoBehaviour
         displacement = gameObject.transform.position - prevPosition;
         speed = displacement / Time.deltaTime;
         localSpeed = transform.worldToLocalMatrix.MultiplyVector(speed);
-        
-        if (Mathf.Abs(speed.magnitude) > 0.00001f)
+
+        if (Mathf.Abs(speed.magnitude) > 0.01f) {
             forward = speed.normalized;
+            if (Mathf.Abs(speed.x) < 0.001f) {
+                eulerY = speed.z > 0f ? 0f : Mathf.PI;
+            } else {
+                eulerY = Mathf.Atan(speed.x / speed.z);
+            }
+        }
 
         prevPosition = gameObject.transform.position;
     }
@@ -42,8 +49,8 @@ public class Tracker : MonoBehaviour
         return new Vector2(localSpeed.x, localSpeed.z);
     }
 
-    public Vector3 getForward() {
-        return forward;
+    public float getEulerY() {
+        return eulerY * Mathf.Rad2Deg;
     }
 
     void OnDrawGizmos() {
@@ -52,5 +59,6 @@ public class Tracker : MonoBehaviour
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(gameObject.transform.position, gameObject.transform.position + forward * speed.magnitude / 5f);
-    }
+    }
+
 }

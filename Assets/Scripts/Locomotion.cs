@@ -26,6 +26,11 @@ public class Locomotion : MonoBehaviour
         _animator.SetFloat("Speed X", _currSpeedXZ.x);   
         _animator.SetFloat("Speed Z", _currSpeedXZ.y);
 
-        transform.forward = Vector3.Lerp(transform.forward, _tracker.getForward(), _interpolationOrientationFactor);
+        Debug.Log("Current Euler Y: " + transform.eulerAngles.y);
+        Debug.Log("Actual Euler Y: " + _tracker.getEulerY());
+        transform.rotation = Quaternion.Euler(0f, Mathf.LerpAngle(transform.eulerAngles.y, _tracker.getEulerY(), _interpolationOrientationFactor), 0f);
+        //transform.forward = currFwd;
+        //Debug.Log("After Forward: " + transform.forward);
+
     }
 }
