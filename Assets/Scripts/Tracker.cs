@@ -54,9 +54,6 @@ public class Tracker : MonoBehaviour
     }
 
     void OnDrawGizmos() {
-        //Gizmos.color = Color.red;
-        //Gizmos.DrawLine(gameObject.transform.position, gameObject.transform.position + speed / 10f);
-
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(gameObject.transform.position, gameObject.transform.position + forward * speed.magnitude / 5f);
     }
