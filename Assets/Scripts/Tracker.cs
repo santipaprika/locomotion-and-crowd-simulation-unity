@@ -21,7 +21,7 @@ public class Tracker : MonoBehaviour
     void FixedUpdate()
     {
         displacement = gameObject.transform.position - prevPosition;
-        speed = displacement / Time.deltaTime;
+        speed = displacement / Time.fixedDeltaTime;
         localSpeed = transform.worldToLocalMatrix.MultiplyVector(speed);
 
         if (Mathf.Abs(speed.magnitude) > 0.01f) {

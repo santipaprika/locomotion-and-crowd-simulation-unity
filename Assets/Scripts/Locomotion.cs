@@ -20,9 +20,10 @@ public class Locomotion : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void LateUpdate()
     {
         _currSpeedXZ = Vector2.Lerp(_currSpeedXZ, _tracker.getSpeedXZ(), _interpolationSpeedFactor);
+        _currSpeedXZ = _tracker.getSpeedXZ();
         _animator.SetFloat("Speed X", _currSpeedXZ.x);   
         _animator.SetFloat("Speed Z", _currSpeedXZ.y);
         
