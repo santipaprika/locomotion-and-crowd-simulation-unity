@@ -670,8 +670,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: badbfcd6bb6f0674fba7a2a280448542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationSpeedFactor: 1
-  _interpolationOrientationFactor: 0.14
+  _interpolationSpeedFactor: 0.1
+  _interpolationOrientationFactor: 0.05
 --- !u!114 &919132148860201826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -697,7 +697,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathManager: {fileID: 0}
-  velocity: {x: 0, y: 0, z: -1}
+  velocity: {x: 0, y: 0, z: 2}
 --- !u!136 &919132148860201828
 CapsuleCollider:
   m_ObjectHideFlags: 0

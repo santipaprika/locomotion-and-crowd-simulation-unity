@@ -19,7 +19,7 @@ public class Simulator : MonoBehaviour
     [HideInInspector]
     public List<Agent> agents = new List<Agent>();
 
-    private float velocity = 1.0f;
+    public float velocity = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -28,9 +28,9 @@ public class Simulator : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        UpdateSimulation(Time.fixedDeltaTime);
+        UpdateSimulation(Time.deltaTime);
     }
 
     void UpdateSimulation(float timestep) 

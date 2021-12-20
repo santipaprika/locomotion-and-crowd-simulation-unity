@@ -20,13 +20,13 @@ public class Locomotion : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void FixedUpdate()
     {
         _currSpeedXZ = Vector2.Lerp(_currSpeedXZ, _tracker.getSpeedXZ(), _interpolationSpeedFactor);
         _currSpeedXZ = _tracker.getSpeedXZ();
         _animator.SetFloat("Speed X", _currSpeedXZ.x);   
-        _animator.SetFloat("Speed Z", _currSpeedXZ.y);
-        
+        // range between 'idle' and 'walk' interpolation is not correct. try to correct it.
+        _animator.SetFloat("Speed Z", _currSpeedXZ.y > 1.591931f ? _currSpeedXZ.y : _currSpeedXZ.y * 1.5f);
         transform.rotation = Quaternion.Euler(0f, Mathf.LerpAngle(transform.eulerAngles.y, _tracker.getEulerY(), _interpolationOrientationFactor), 0f);
     }
 }

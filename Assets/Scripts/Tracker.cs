@@ -21,16 +21,13 @@ public class Tracker : MonoBehaviour
     void FixedUpdate()
     {
         displacement = gameObject.transform.position - prevPosition;
-        speed = displacement / Time.fixedDeltaTime;
+        speed = displacement / Time.deltaTime;
         localSpeed = transform.worldToLocalMatrix.MultiplyVector(speed);
 
         if (Mathf.Abs(speed.magnitude) > 0.01f) {
             forward = speed.normalized;
-            if (Mathf.Abs(speed.x) < 0.001f) {
-                eulerY = speed.z > 0f ? 0f : Mathf.PI;
-            } else {
-                eulerY = Mathf.Atan(speed.x / speed.z);
-            }
+            float offset = speed.z < 0 ? Mathf.PI : 0;
+            eulerY = Mathf.Atan(speed.x / speed.z) + offset;
         }
 
         prevPosition = gameObject.transform.position;
@@ -55,7 +52,7 @@ public class Tracker : MonoBehaviour
 
     void OnDrawGizmos() {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(gameObject.transform.position, gameObject.transform.position + forward * speed.magnitude / 5f);
+        Gizmos.DrawLine(gameObject.transform.position, gameObject.transform.position + forward * speed.magnitude / 2f);
     }
 
 }

@@ -17,9 +17,9 @@ public class Agent : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        transform.position += velocity * Time.fixedDeltaTime;
-        GetComponent<Rigidbody>().position += velocity * Time.fixedDeltaTime;
+        // transform.position += velocity * Time.deltaTime;
+        GetComponent<Rigidbody>().position += velocity * Time.deltaTime;
     }
 }

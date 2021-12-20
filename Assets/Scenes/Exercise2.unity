@@ -248,9 +248,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa03d8d234d875248b7748591e2f2ab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 269012838675731254, guid: 82d0e5cbc27ee2e4eaa1e6899b1739ff, type: 3}
+  agent: {fileID: 7283860590745491672, guid: 577321deed44ec8478d4ee464ee43559, type: 3}
   numberOfAgents: 50
   plane: {fileID: 313386459}
+  agentsVelocity: 2.5
 --- !u!4 &391334651
 Transform:
   m_ObjectHideFlags: 0
