@@ -18,17 +18,33 @@ public class GridGenerator : MonoBehaviour
 
         grid = new GridGraph(cellsPerDim, new Vector2(gridExtents.x, gridExtents.y), obstacleRate);
 
+        // Create parent map object
+        GameObject mapGO = new GameObject("Map");
         for(int i = 0; i < grid.nodes.Count; i++) {
             GridCell cell = grid.nodes[i];
             if (cell.isBlocked()) {
-                Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), cell.getCenter(), Quaternion.identity);
+                GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                wall.transform.position = cell.getCenter();
+                wall.transform.parent = mapGO.transform;
             }
-        }    
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void OnDrawGizmos() {
+        if (!Application.isPlaying) return;
+
+        Gizmos.color = Color.yellow;
+        for(int i = 0; i < grid.nodes.Count; i++) {
+            GridCell cell = grid.nodes[i];
+            for (int j = 0; j < grid.connections[i].connections.Count; j++) {
+                Gizmos.DrawLine(cell.getCenter(), grid.connections[i].connections[j].toNode.getCenter());
+            }
+        }
     }
 }
