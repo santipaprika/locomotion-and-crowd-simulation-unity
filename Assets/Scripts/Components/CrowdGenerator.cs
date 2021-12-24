@@ -6,7 +6,7 @@ public class CrowdGenerator : MonoBehaviour {
     public Agent agent;
     public int numberOfAgents = 20;
     public Collider plane;
-    public float agentsVelocity = 0.5f;
+    public float agentsVelocity = 2f;
 
     // Start is called before the first frame update
     void Start() {

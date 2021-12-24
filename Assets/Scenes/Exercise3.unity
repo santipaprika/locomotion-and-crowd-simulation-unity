@@ -152,9 +152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 885e63252711d7e40bb1395d859e2367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellsPerDim: {x: 100, y: 100}
+  agent: {fileID: 7283860590745491672, guid: 577321deed44ec8478d4ee464ee43559, type: 3}
+  numberOfAgents: 20
+  agentsVelocity: 2
+  cellsPerDim: {x: 5, y: 5}
   gridExtents: {x: 100, y: 100}
-  obstacleRate: 0.4
+  obstacleRate: 0.2
 --- !u!4 &443116791
 Transform:
   m_ObjectHideFlags: 0
@@ -259,7 +262,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 845601665}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.36145234, y: 0, z: 4.0000486}
+  m_LocalPosition: {x: 139.3, y: 0, z: 140}
   m_LocalScale: {x: 30, y: 30, z: 30}
   m_Children: []
   m_Father: {fileID: 0}

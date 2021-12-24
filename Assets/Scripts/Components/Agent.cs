@@ -22,4 +22,10 @@ public class Agent : MonoBehaviour
         // transform.position += velocity * Time.deltaTime;
         GetComponent<Rigidbody>().position += velocity * Time.deltaTime;
     }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, new Vector3(pathManager.goal.x, 0, pathManager.goal.y));
+    }
 }

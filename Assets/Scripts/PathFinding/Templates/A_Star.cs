@@ -45,7 +45,7 @@ namespace PathFinding{
 			return visitedNodes;
 		}
 		
-		public override List<TNode> findpath(TGraph graph, TNode start, TNode end, THeuristic heuristic, ref int found)
+		public override List<TNode> findPath(TGraph graph, TNode start, TNode end, THeuristic heuristic, ref int found)
 		{
 			List<TNode> path = new List<TNode>();
 			

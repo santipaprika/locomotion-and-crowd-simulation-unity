@@ -5,16 +5,24 @@ using UnityEngine;
 using PathFinding;
 public class GridGraph : FiniteGraph<GridCell, CellConnection, GridNodeConnections>
 {
+    public List<GridCell> availableNodes;
     enum BorderPoint { None, X, Y };
     public GridGraph(Vector2Int cellsPerDim, Vector2 gridDims, float obstacleRate)
     {
+        availableNodes = new List<GridCell>();
+
         Vector2 cellSize = gridDims / (Vector2)cellsPerDim;
         for (int i = 0; i < cellsPerDim.x; i++)
         {
             for (int j = 0; j < cellsPerDim.y; j++)
             {
-                nodes.Add(new GridCell(i, j, cellsPerDim.y, cellSize, obstacleRate));
-                connections.Add(new GridNodeConnections(nodes[nodes.Count - 1]));
+                GridCell cell = new GridCell(i, j, cellsPerDim.y, cellSize, obstacleRate);
+                nodes.Add(cell);
+                connections.Add(new GridNodeConnections(cell));
+                
+                if (!nodes[nodes.Count-1].isBlocked()) {
+                    availableNodes.Add(cell);
+                }
             }
         }
 
@@ -38,6 +46,18 @@ public class GridGraph : FiniteGraph<GridCell, CellConnection, GridNodeConnectio
             {
                 // Connect last column only with vertical neighbors only if we are not in the last row
                 ConnectNeighbors((i + 1) * cellsPerDim.y - 1, cellsPerDim.y, BorderPoint.Y);
+            }
+        }
+
+        // Instantiate walls inside parent 'Map' GameObject
+        GameObject mapGO = new GameObject("Map");
+        for(int i = 0; i < nodes.Count; i++) {
+            GridCell cell = nodes[i];
+            if (cell.isBlocked()) {
+                GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                wall.transform.position = cell.getCenter();
+                wall.transform.localScale = new Vector3(cellSize.x, 3, cellSize.y);
+                wall.transform.parent = mapGO.transform;
             }
         }
     }

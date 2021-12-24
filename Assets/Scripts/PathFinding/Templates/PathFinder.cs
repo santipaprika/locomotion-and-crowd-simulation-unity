@@ -20,7 +20,7 @@ namespace PathFinding{
 		// found < 0 --> path not found
 		// found == 0 --> path not found or incomplete
 		// found > 0 --> path found
-		public abstract List<TNode> findpath(TGraph graph, TNode start, TNode end, THeuristic heuristic, ref int found); 
+		public abstract List<TNode> findPath(TGraph graph, TNode start, TNode end, THeuristic heuristic, ref int found); 
 	};
 
 }
