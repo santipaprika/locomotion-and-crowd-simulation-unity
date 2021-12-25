@@ -13,6 +13,7 @@ public class GridNodeConnections : NodeConnections<GridCell, CellConnection>
     }
 
     public void Connect(GridCell otherCell) {
-        connections.Add(new CellConnection(cell, otherCell));
+        CellConnection connection = new CellConnection(cell, otherCell);
+        connections.Add(connection);
     }
 }

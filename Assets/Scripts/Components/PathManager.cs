@@ -10,6 +10,9 @@ public class PathManager : MonoBehaviour
     [HideInInspector]
     public Vector2 goal;
 
+    private List<GridCell> path;
+    private Grid_A_Star gridAStar;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,21 +24,23 @@ public class PathManager : MonoBehaviour
             int found = 1; // init as not found
 
             // pick a random node from the available ones to be the goal
-            GridCell goalNode = grid.availableNodes[Random.Range(0,grid.availableNodes.Count-1)];
+            GridCell goalNode = grid.availableNodes[Random.Range(0, grid.availableNodes.Count - 1)];
             goal = new Vector2(goalNode.getCenter().x, goalNode.getCenter().z);
 
             // define heuristic
             GridHeuristic heuristic = new GridHeuristic(goalNode);
 
             // retrieve node index
-            Vector2 cellSize = gridGenerator.gridExtents/(Vector2)gridGenerator.cellsPerDim;
+            Vector2 cellSize = gridGenerator.gridExtents / (Vector2)gridGenerator.cellsPerDim;
             Vector2 nodeFloatCoords = new Vector2(transform.position.x, transform.position.z) / cellSize;
-            int nodeIdx = (int)(nodeFloatCoords.x*gridGenerator.cellsPerDim.y) + (int)nodeFloatCoords.y;
-            List<GridCell> path = gridGenerator.gridAStar.findPath(grid, grid.nodes[nodeIdx], goalNode, heuristic, ref found);
+            int nodeIdx = (int)(nodeFloatCoords.x * gridGenerator.cellsPerDim.y) + (int)nodeFloatCoords.y;
+
+            gridAStar = new Grid_A_Star(grid.nodes.Count, 50.0f, 100);
+            path = gridAStar.findPath(grid, grid.nodes[nodeIdx], goalNode, heuristic, ref found);
         }
         else
         {
-           // assign same plane object as in Crowd Generator object
+            // assign same plane object as in Crowd Generator object
             plane = GameObject.FindObjectOfType<CrowdGenerator>().plane;
 
             Vector3 minBound = plane.bounds.min;
@@ -60,6 +65,22 @@ public class PathManager : MonoBehaviour
                 Vector3 maxBound = plane.bounds.max;
                 goal = new Vector2(Random.Range(minBound.x, maxBound.x), Random.Range(minBound.z, maxBound.z));
             }
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        // If you want to debug with Gizmos use a low number of agents! Otherwise it will be a bit messy.
+        List<Vector3> openNodesCenters = gridAStar.getOpenNodeCenters();
+        Gizmos.color = Color.magenta;
+        for (int i = 0; i < openNodesCenters.Count; i++)
+        {
+            Gizmos.DrawSphere(openNodesCenters[i], 2);
+        }
+
+        Gizmos.color = Color.yellow;
+        for (int i = 0; i < path.Count; i++) {
+            Gizmos.DrawSphere(path[i].getCenter(), 2);
         }
     }
 }

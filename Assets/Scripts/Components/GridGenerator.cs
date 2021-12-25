@@ -12,7 +12,6 @@ public class GridGenerator : MonoBehaviour
     public Vector2 gridExtents = new Vector2(10, 10);
     public float obstacleRate = 0.2f;
     public GridGraph grid;
-    public Grid_A_Star gridAStar;
 
     // singleton
     public static GridGenerator _instance = null;
@@ -32,8 +31,6 @@ public class GridGenerator : MonoBehaviour
             Application.Quit();
 #endif
         }
-
-        gridAStar = new Grid_A_Star(grid.nodes.Count, 50.0f, 100);
 
         // get simulator agents list as reference
         Simulator simulator = Simulator.GetInstance();

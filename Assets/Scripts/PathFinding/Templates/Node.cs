@@ -13,6 +13,8 @@ namespace PathFinding{
 		public int getId(){ return id; }
 		
 		public int id;
+
+        public abstract Vector3 getCenter();
 	};
 
 }

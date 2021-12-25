@@ -16,21 +16,24 @@ public class GridCell : Node
     protected bool blocked;
     protected Vector3 center;
 
-    public GridCell(int i, int j, int cellsPerRow, Vector2 dims, float obstacleProbability) : base(i*cellsPerRow + j) {
-        blocked = Random.Range(0.0f,1.0f) < obstacleProbability;
+    public GridCell(int i, int j, int cellsPerRow, Vector2 dims, float obstacleProbability) : base(i * cellsPerRow + j)
+    {
+        blocked = Random.Range(0.0f, 1.0f) < obstacleProbability;
 
         center = new Vector3(i * dims.x, 0, j * dims.y);
-        xMin = center.x - dims.x/2.0f;  
-        xMax = center.x - dims.x/2.0f;  
-        zMin = center.z - dims.y/2.0f;  
-        zMax = center.z - dims.y/2.0f;  
+        xMin = center.x - dims.x / 2.0f;
+        xMax = center.x - dims.x / 2.0f;
+        zMin = center.z - dims.y / 2.0f;
+        zMax = center.z - dims.y / 2.0f;
     }
 
-    public bool isBlocked() {
+    public bool isBlocked()
+    {
         return blocked;
     }
 
-    public Vector3 getCenter() {
+    public override Vector3 getCenter()
+    {
         return center;
     }
 }
