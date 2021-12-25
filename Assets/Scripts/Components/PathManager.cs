@@ -13,6 +13,9 @@ public class PathManager : MonoBehaviour
     private List<GridCell> path;
     private Grid_A_Star gridAStar;
 
+    // For gizmo visualization
+    private float assignedColorHue;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,6 +51,8 @@ public class PathManager : MonoBehaviour
             goal = new Vector2(Random.Range(minBound.x, maxBound.x), Random.Range(minBound.z, maxBound.z));
         }
 
+        // Assign random Hue
+        assignedColorHue = Random.Range(0f, 1f);
 
     }
 
@@ -72,13 +77,13 @@ public class PathManager : MonoBehaviour
     {
         // If you want to debug with Gizmos use a low number of agents! Otherwise it will be a bit messy.
         List<Vector3> openNodesCenters = gridAStar.getOpenNodeCenters();
-        Gizmos.color = Color.magenta;
+        Gizmos.color = Color.HSVToRGB(assignedColorHue, 1f, 0.5f);
         for (int i = 0; i < openNodesCenters.Count; i++)
         {
             Gizmos.DrawSphere(openNodesCenters[i], 2);
         }
 
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.HSVToRGB(assignedColorHue, 1f, 1f);
         for (int i = 0; i < path.Count; i++) {
             Gizmos.DrawSphere(path[i].getCenter(), 2);
         }

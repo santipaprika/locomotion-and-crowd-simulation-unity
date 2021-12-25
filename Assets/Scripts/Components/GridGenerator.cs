@@ -5,6 +5,8 @@ using UnityEngine;
 public class GridGenerator : MonoBehaviour
 {
     public Agent agent;
+
+    // USE LOW NUMBER OF AGENTS IF YOU WANT TO DEBUG WITH GIZMOS (1 or 2, otherwise it will be a bit messy)
     public int numberOfAgents = 20;
     public float agentsVelocity = 2f;
 
