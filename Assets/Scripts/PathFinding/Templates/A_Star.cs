@@ -120,7 +120,7 @@ namespace PathFinding
                         openNodes.Add(visitedNodes[nodeConnection.toNode], visitedNodes[nodeConnection.toNode]);
                     }
 
-                    // avoid closed check, since it does not apply to grid
+                    // avoid closed check, since it does not apply to grid?
 
                     // If node wasn't visited yet, create a new node record associated to it
                     if (!neighborHasBeenVisited)
@@ -138,6 +138,12 @@ namespace PathFinding
                         openNodes.Add(neighborRecord, neighborRecord);
                         visitedNodes[nodeConnection.toNode] = neighborRecord;
                     }
+                }
+
+                if (openNodes.Count == 0)
+                {
+                    found = -1;
+                    return path;
                 }
             }
 

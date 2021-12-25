@@ -8,7 +8,7 @@ public class Agent : MonoBehaviour
     public PathManager pathManager;
 
     // [HideInInspector]
-    public Vector3 velocity = new Vector3(0,0,0);
+    public Vector3 velocity = new Vector3(0, 0, 0);
 
     // Start is called before the first frame update
     void Start()
@@ -19,8 +19,10 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // transform.position += velocity * Time.deltaTime;
-        GetComponent<Rigidbody>().position += velocity * Time.deltaTime;
+        if (pathManager.moveAgent)
+        {
+            GetComponent<Rigidbody>().position += velocity * Time.deltaTime;
+        }
     }
 
     void OnDrawGizmos()
