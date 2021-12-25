@@ -47,8 +47,10 @@ namespace PathFinding
                 if (ReferenceEquals(x, y)) return 0;
 
                 float costX = 0f, costY = 0f;
-                if (x != null) costX = x.costSoFar + x.estimatedTotalCost;
-                if (y != null) costY = y.costSoFar + y.estimatedTotalCost;
+
+                // take density into account too
+                if (x != null) costX = x.costSoFar + x.estimatedTotalCost + 1000f * x.node.density;
+                if (y != null) costY = y.costSoFar + y.estimatedTotalCost + 1000f * y.node.density;
                 if (costX.CompareTo(costY) == 0)
                 {
                     return 1;
@@ -153,6 +155,7 @@ namespace PathFinding
             while (pathNode.connection != null)
             {
                 path.Insert(0, pathNode.node);
+                pathNode.node.density++;
                 pathNode = pathNode.connection;
             }
 

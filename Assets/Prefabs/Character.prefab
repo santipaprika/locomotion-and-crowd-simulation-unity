@@ -792,6 +792,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   plane: {fileID: 0}
   goal: {x: 0, y: 0}
+  moveAgent: 1
 --- !u!136 &3160106519106037081
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -840,14 +841,14 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3526599048247504825}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 45.17
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 116
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!1 &3614162301344547416
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,11 @@ public class GridGenerator : MonoBehaviour
     public Vector2Int cellsPerDim = new Vector2Int(10, 10);
     public Vector2 gridExtents = new Vector2(10, 10);
     public float obstacleRate = 0.2f;
+    public bool debugGrid = true;
+    public bool debugNodeDensity = true;
+    public bool debugOpenNodes = true;
+    public bool debugPath = true;
+    public bool debugAllAgents = false;
     public GridGraph grid;
 
     // singleton
@@ -74,7 +79,8 @@ public class GridGenerator : MonoBehaviour
             GridCell cell = grid.nodes[i];
             for (int j = 0; j < grid.connections[i].connections.Count; j++)
             {
-                Gizmos.DrawLine(cell.getCenter(), grid.connections[i].connections[j].toNode.getCenter());
+                if (debugGrid) Gizmos.DrawLine(cell.getCenter(), grid.connections[i].connections[j].toNode.getCenter());
+                if (debugNodeDensity && cell.density > 0) Gizmos.DrawSphere(cell.getCenter(), cell.density * 0.2f);
             }
         }
     }

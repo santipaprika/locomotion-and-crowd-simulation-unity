@@ -110,12 +110,25 @@ public class PathManager : MonoBehaviour
         if (!moveAgent) return goal;
 
         Vector2 waypoint = new Vector2(path[0].getCenter().x, path[0].getCenter().z);
+        path[0].density--;
         path.RemoveAt(0);
 
         return waypoint;
     }
 
+    void OnDrawGizmosSelected()
+    {
+        if (!GridGenerator._instance.debugAllAgents)
+            DrawGizmos();
+    }
+
     void OnDrawGizmos()
+    {
+        if (GridGenerator._instance.debugAllAgents)
+            DrawGizmos();
+    }
+
+    void DrawGizmos()
     {
         // Bright spheres --> Path
         // Dark spheres --> Open nodes when the end node was reached
@@ -125,27 +138,33 @@ public class PathManager : MonoBehaviour
 
         Vector2 cellSize = GridGenerator._instance.gridExtents / (Vector2)GridGenerator._instance.cellsPerDim;
 
-        List<Vector3> openNodesCenters = gridAStar.getOpenNodeCenters();
-        Gizmos.color = Color.HSVToRGB(assignedColorHue, 0.7f, 0.5f);
-        for (int i = 0; i < openNodesCenters.Count; i++)
+        if (GridGenerator._instance.debugOpenNodes)
         {
-            Gizmos.DrawSphere(openNodesCenters[i], Mathf.Min(cellSize.x, cellSize.y) / 4f);
+            List<Vector3> openNodesCenters = gridAStar.getOpenNodeCenters();
+            Gizmos.color = Color.HSVToRGB(assignedColorHue, 0.7f, 0.5f);
+            for (int i = 0; i < openNodesCenters.Count; i++)
+            {
+                Gizmos.DrawSphere(openNodesCenters[i], Mathf.Min(cellSize.x, cellSize.y) / 4f);
+            }
         }
 
-        Gizmos.color = Color.HSVToRGB(assignedColorHue, 0.7f, 1f);
-        for (int i = 0; i < path.Count; i++)
+        if (GridGenerator._instance.debugPath)
         {
-            if (i == path.Count - 1)
+            Gizmos.color = Color.HSVToRGB(assignedColorHue, 0.7f, 1f);
+            for (int i = 0; i < path.Count; i++)
             {
-                Gizmos.color = Color.HSVToRGB(assignedColorHue, 1f, 1f);
+                if (i == path.Count - 1)
+                {
+                    Gizmos.color = Color.HSVToRGB(assignedColorHue, 1f, 1f);
 
+                }
+                Gizmos.DrawCube(path[i].getCenter(), new Vector3(cellSize.x, 0.2f, cellSize.y));
             }
-            Gizmos.DrawCube(path[i].getCenter(), new Vector3(cellSize.x, 0.2f, cellSize.y));
         }
 
         if (!moveAgent)
         {
-            Gizmos.DrawCube(transform.position, new Vector3(cellSize.x/2f, 3f, cellSize.y/2f));
+            Gizmos.DrawCube(transform.position, new Vector3(cellSize.x / 2f, 3f, cellSize.y / 2f));
         }
     }
 }
