@@ -14,7 +14,6 @@ public class PathManager : MonoBehaviour
     private List<GridCell> path = null;
     private Grid_A_Star gridAStar = null;
     private GridCell startNode = null;
-    private Vector2 cellSize;
 
     // For gizmo visualization
     private float assignedColorHue;
@@ -50,7 +49,7 @@ public class PathManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        float reachedThr = Mathf.Min(cellSize.x, cellSize.y) / 2f;
+        float reachedThr = Mathf.Min(GridGenerator._instance.grid.cellSize.x, GridGenerator._instance.grid.cellSize.y) / 2f;
         if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), goal) < reachedThr)
         {
             if (gridAStar != null)
@@ -93,8 +92,7 @@ public class PathManager : MonoBehaviour
         if (startNode == null)
         {
             // retrieve node index
-            cellSize = gridGenerator.gridExtents / (Vector2)gridGenerator.cellsPerDim;
-            Vector2 nodeFloatCoords = new Vector2(transform.position.x, transform.position.z) / cellSize;
+            Vector2 nodeFloatCoords = new Vector2(transform.position.x, transform.position.z) / GridGenerator._instance.grid.cellSize;
             int nodeIdx = (int)(nodeFloatCoords.x * gridGenerator.cellsPerDim.y) + (int)nodeFloatCoords.y;
             startNode = grid.nodes[nodeIdx];
         }
@@ -115,7 +113,6 @@ public class PathManager : MonoBehaviour
         // Don't update if path not found
         if (!moveAgent) return goal;
 
-        Debug.Log(path.Count);
         Vector2 waypoint = new Vector2(path[0].getCenter().x, path[0].getCenter().z);
         path[0].density--;
         path.RemoveAt(0);
@@ -143,6 +140,7 @@ public class PathManager : MonoBehaviour
 
         // If you want to debug with Gizmos use a low number of agents! Otherwise it will be a bit messy.
 
+        Vector2 cellSize = GridGenerator._instance.grid.cellSize;
         if (GridGenerator._instance.debugOpenNodes)
         {
             List<Vector3> openNodesCenters = gridAStar.getOpenNodeCenters();

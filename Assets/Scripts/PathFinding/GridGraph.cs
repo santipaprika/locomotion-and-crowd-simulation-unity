@@ -6,12 +6,13 @@ using PathFinding;
 public class GridGraph : FiniteGraph<GridCell, CellConnection, GridNodeConnections>
 {
     public List<GridCell> availableNodes;
+    public Vector2 cellSize;
     enum BorderPoint { None, X, Y };
     public GridGraph(Vector2Int cellsPerDim, Vector2 gridDims, float obstacleRate)
     {
         availableNodes = new List<GridCell>();
 
-        Vector2 cellSize = gridDims / (Vector2)cellsPerDim;
+        cellSize = gridDims / (Vector2)cellsPerDim;
         for (int i = 0; i < cellsPerDim.x; i++)
         {
             for (int j = 0; j < cellsPerDim.y; j++)

@@ -44,12 +44,23 @@ public class Simulator : MonoBehaviour
             agents[i].velocity = Truncate(agents[i].velocity, maxSpeed); // limit agent speed
         }
     }
+    Vector3 Truncate(Vector3 v, float max)
+    {
+        float size = Mathf.Min(v.magnitude, max);
+        return v.normalized * size;
+    }
 
     Vector3 ComputeSteeringForces(Agent a, Vector3 target)
     {
         GridGenerator gridGenerator = GridGenerator._instance;
-        Vector3 steeringForces = Seek(a, target) * gridGenerator.seekWeight;
-        // Vector3 steeringForces = Seek(a, target);
+        Vector3 steeringForces = new Vector3(0, 0, 0);
+
+        if (gridGenerator.doSeek) steeringForces += Seek(a, target) * gridGenerator.seekWeight;
+        else a.velocity = (target - a.transform.position).normalized * velocity;
+
+        if (gridGenerator.doAvoid) steeringForces += Avoid(a, target) * gridGenerator.avoidWeight;
+
+
         return steeringForces;
     }
 
@@ -59,10 +70,109 @@ public class Simulator : MonoBehaviour
         return desiredVelocity - a.velocity;
     }
 
-    Vector3 Truncate(Vector3 v, float max)
+    Vector3 Avoid(Agent a, Vector3 target)
     {
-        float size = Mathf.Min(v.magnitude, max);
-        return v.normalized * size;
+        float radius = a.GetComponent<Collider>().bounds.extents.x;
+        Vector3 agentPos = a.transform.position;
+        float distanceToGoal = Vector2.Distance(a.pathManager.goal, new Vector2(agentPos.x, agentPos.z));
+
+        float closestDistance = 9999f;
+        float closestDistanceProjection = 0f;
+
+        // Check potential collisions with other agents
+        for (int i = 0; i < agents.Count; i++)
+        {
+            if (agents[i] == a) continue;
+
+            // Notice ref closestDistance. It will be updated if necessary.
+            GetProjectedDistanceIfCloser(a.transform, radius, agents[i].transform.position, 
+                    agents[i].velocity, radius, distanceToGoal, ref closestDistance, ref closestDistanceProjection);
+        }
+
+        // Check potential collisions with walls
+        List<GridCell> gridNodes = GridGenerator._instance.grid.nodes;
+        float wallRadius = GridGenerator._instance.grid.cellSize.magnitude / 3f;  // slightly smaller (2.3 instead of 2) to have a lower maximum error
+        bool closestObstacleIsWall = false; // if a closest wall is detected, the radius for walls will be used instead of the agents one
+        for (int i = 0; i < gridNodes.Count; i++)
+        {
+            if (!gridNodes[i].isBlocked()) continue;
+
+            // Notice ref closestDistance and closestDistanceProjection. These will be updated if necessary.
+            closestObstacleIsWall = GetProjectedDistanceIfCloser(a.transform, radius, gridNodes[i].getCenter(), 
+                        Vector3.zero, wallRadius, distanceToGoal, ref closestDistance, ref closestDistanceProjection);
+        }
+
+        if (closestDistance < distanceToGoal)
+        {
+            // opposite (-) projected distance to avoid obstacle
+            // the smaller the distance, the greater the force to apply to ensure avoidance
+            float sign = closestDistanceProjection > 0 ? -1f : 1f;
+            float closestObstacleRadius = closestObstacleIsWall ? wallRadius : radius;
+            return (distanceToGoal - closestDistance) * a.transform.right * sign;
+        }
+
+        return Vector3.zero;
+    }
+
+    bool GetProjectedDistanceIfCloser(Transform agentTransform, float agentRadius, Vector3 obstaclePos,
+                                            Vector3 obstacleSpeed, float obstacleRadius, float distanceToGoal,
+                                            ref float closestDistance, ref float closestDistanceProjection)
+    {
+        bool closerObjectFound = false;
+
+        // guess future position of the other agent
+        Vector3 obstaclePosition = obstaclePos + obstacleSpeed * Time.deltaTime;
+        Vector3 obstacleAgentDiff = obstaclePosition - agentTransform.position;
+
+        // check if projected distance is smaller that the radius of both imaginary cylinder and agent sphere (which are the same, then 2*R)
+        // and discard agents that are in the back
+        float projectedDistanceRight = Vector3.Dot(obstacleAgentDiff, agentTransform.right);
+        float projectedDistanceForward = Vector3.Dot(obstacleAgentDiff, agentTransform.forward);
+        if (Mathf.Abs(projectedDistanceRight) < (agentRadius + obstacleRadius) && projectedDistanceForward > 0)
+        {
+            // we want to avoid the agent only if the distance to it is closer than the distance to the current goal
+            // and closer than the closes hit found yet
+            float obstacleAgentDistance = obstacleAgentDiff.magnitude;
+            if (obstacleAgentDistance < distanceToGoal && obstacleAgentDistance < closestDistance)
+            {
+                // update closest distance and its lateral (side-up) projection
+                closestDistance = obstacleAgentDistance;
+                closestDistanceProjection = projectedDistanceRight;
+                closerObjectFound = true;
+            }
+        }
+
+        return closerObjectFound;
+    }
+
+    Vector3 UnalignedCollisionAvoidance(Agent a, Vector3 target)
+    {
+        float radius = a.GetComponent<Collider>().bounds.extents.x;
+        Vector3 agentPos = a.transform.position;
+        float distanceToGoal = Vector2.Distance(a.pathManager.goal, new Vector2(agentPos.x, agentPos.z));
+
+        float closestDistance = 9999f;
+        float closestDistanceProjection = 0f;
+
+        // Check potential collisions with other agents
+        for (int i = 0; i < agents.Count; i++)
+        {
+            if (agents[i] == a) continue;
+
+            // Notice ref closestDistance. It will be updated if necessary.
+            GetProjectedDistanceIfCloser(a.transform, radius, agents[i].transform.position, 
+                    agents[i].velocity, radius, distanceToGoal, ref closestDistance, ref closestDistanceProjection);
+        }
+
+        if (closestDistance < distanceToGoal)
+        {
+            // opposite (-) projected distance to avoid obstacle
+            // the smaller the distance, the greater the force to apply to ensure avoidance
+            float sign = closestDistanceProjection > 0 ? -1f : 1f;
+            return (distanceToGoal - radius) * a.transform.right * sign;
+        }
+
+        return Vector3.zero;
     }
 
 }

@@ -13,7 +13,11 @@ public class GridGenerator : MonoBehaviour
     public Vector2Int cellsPerDim = new Vector2Int(10, 10);
     public Vector2 gridExtents = new Vector2(10, 10);
     public float obstacleRate = 0.2f;
-    public float seekWeight = 2.0f;
+    public bool doSeek = true;
+    public float seekWeight = 1.5f;
+    public bool doAvoid = true;
+    public float avoidWeight = 1f;
+
     public bool debugGrid = true;
     public bool debugNodeDensity = true;
     public bool debugOpenNodes = true;

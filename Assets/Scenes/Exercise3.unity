@@ -153,12 +153,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 7283860590745491672, guid: 577321deed44ec8478d4ee464ee43559, type: 3}
-  numberOfAgents: 10
+  numberOfAgents: 5
   agentsVelocity: 2
   cellsPerDim: {x: 15, y: 15}
   gridExtents: {x: 30, y: 30}
   obstacleRate: 0.1
-  seekWeight: 2
+  doSeek: 1
+  seekWeight: 1.5
+  doAvoid: 1
+  avoidWeight: 200
   debugGrid: 1
   debugNodeDensity: 1
   debugOpenNodes: 1
