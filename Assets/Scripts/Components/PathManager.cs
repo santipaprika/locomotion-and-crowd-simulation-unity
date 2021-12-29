@@ -14,6 +14,7 @@ public class PathManager : MonoBehaviour
     private List<GridCell> path = null;
     private Grid_A_Star gridAStar = null;
     private GridCell startNode = null;
+    private Vector2 cellSize;
 
     // For gizmo visualization
     private float assignedColorHue;
@@ -49,7 +50,8 @@ public class PathManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), goal) < 0.1f)
+        float reachedThr = Mathf.Min(cellSize.x, cellSize.y) / 2f;
+        if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), goal) < reachedThr)
         {
             if (gridAStar != null)
             {
@@ -91,7 +93,7 @@ public class PathManager : MonoBehaviour
         if (startNode == null)
         {
             // retrieve node index
-            Vector2 cellSize = gridGenerator.gridExtents / (Vector2)gridGenerator.cellsPerDim;
+            cellSize = gridGenerator.gridExtents / (Vector2)gridGenerator.cellsPerDim;
             Vector2 nodeFloatCoords = new Vector2(transform.position.x, transform.position.z) / cellSize;
             int nodeIdx = (int)(nodeFloatCoords.x * gridGenerator.cellsPerDim.y) + (int)nodeFloatCoords.y;
             startNode = grid.nodes[nodeIdx];
@@ -140,8 +142,6 @@ public class PathManager : MonoBehaviour
         // Red prisms --> Character idle because path was not found
 
         // If you want to debug with Gizmos use a low number of agents! Otherwise it will be a bit messy.
-
-        Vector2 cellSize = GridGenerator._instance.gridExtents / (Vector2)GridGenerator._instance.cellsPerDim;
 
         if (GridGenerator._instance.debugOpenNodes)
         {

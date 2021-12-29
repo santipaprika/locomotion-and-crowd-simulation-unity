@@ -831,7 +831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: badbfcd6bb6f0674fba7a2a280448542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationSpeedFactor: 0.05
+  _interpolationSpeedFactor: 0.005
   _interpolationOrientationFactor: 0.05
 --- !u!54 &742006672805635088
 Rigidbody:

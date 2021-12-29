@@ -107,41 +107,32 @@ namespace PathFinding
                     float cost = current.costSoFar + nodeConnection.getCost();
 
                     bool neighborHasBeenVisited = visitedNodes.ContainsKey(nodeConnection.toNode);
+
+                    // If explored path is better than current one, replace it
                     if (neighborHasBeenVisited &&
                         visitedNodes[nodeConnection.toNode].category == NodeRecordCategory.OPEN &&
                         cost < visitedNodes[nodeConnection.toNode].costSoFar)
                     {
+                        // Create new record for the current scenario
+                        NodeRecord betterNeighborRecord = new NodeRecord();
+                        betterNeighborRecord.id = id++;
+                        betterNeighborRecord.node = nodeConnection.toNode;
+                        betterNeighborRecord.connection = current;
+                        betterNeighborRecord.costSoFar = cost;  // g(neighbor)
+                        betterNeighborRecord.estimatedTotalCost = visitedNodes[nodeConnection.toNode].estimatedTotalCost;  // This metric does not depend on the path
+                        betterNeighborRecord.category = NodeRecordCategory.OPEN;
+                        betterNeighborRecord.depth = current.depth + 1;
+
+                        // Remove replaced record
                         openNodes.Remove(visitedNodes[nodeConnection.toNode]);
-
-                        NodeRecord neighborRecord = new NodeRecord();
-                        neighborRecord.id = id++;
-                        neighborRecord.node = nodeConnection.toNode;
-                        neighborRecord.connection = current;
-                        neighborRecord.costSoFar = cost;  // g(neighbor)
-                        neighborRecord.estimatedTotalCost = heuristic.estimateCost(neighborRecord.node);  // h(neighbor)
-                        neighborRecord.category = NodeRecordCategory.OPEN;
-                        neighborRecord.depth = current.depth + 1;
-
                         visitedNodes.Remove(nodeConnection.toNode);
 
-                        openNodes.Add(neighborRecord, neighborRecord);
-                        visitedNodes[nodeConnection.toNode] = neighborRecord;
-
-                        // change parent, cost and depth
-                        // visitedNodes[nodeConnection.toNode].connection = current;
-                        // visitedNodes[nodeConnection.toNode].costSoFar = cost;
-                        // visitedNodes[nodeConnection.toNode].depth = current.depth + 1;
-                        // visitedNodes[nodeConnection.toNode].id = id++;
-
-                        // add modified node record into sorted list
-                        // if (!openNodes.ContainsKey(visitedNodes[nodeConnection.toNode])) {
-                        //     // openNodes.Remove(visitedNodes[nodeConnection.toNode]);
-                        //     Debug.Log("Key is already contained: " + visitedNodes[nodeConnection.toNode].id + " || vs " + openNodes.ElementAt(openNodes.IndexOfKey(visitedNodes[nodeConnection.toNode])).Key.id);
-                        // }
-                        // openNodes.Add(visitedNodes[nodeConnection.toNode], visitedNodes[nodeConnection.toNode]);
+                        // Add new better record
+                        openNodes.Add(betterNeighborRecord, betterNeighborRecord);
+                        visitedNodes[nodeConnection.toNode] = betterNeighborRecord;
                     }
 
-                    // avoid closed check, since it does not apply to grid?
+                    // avoid closed check, since it is not useful in grids
 
                     // If node wasn't visited yet, create a new node record associated to it
                     if (!neighborHasBeenVisited)
