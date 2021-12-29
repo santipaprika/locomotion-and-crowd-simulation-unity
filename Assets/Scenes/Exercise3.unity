@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 7283860590745491672, guid: 577321deed44ec8478d4ee464ee43559, type: 3}
-  numberOfAgents: 5
+  numberOfAgents: 30
   agentsVelocity: 2
   cellsPerDim: {x: 15, y: 15}
   gridExtents: {x: 30, y: 30}

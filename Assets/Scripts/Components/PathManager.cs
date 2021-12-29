@@ -51,16 +51,20 @@ public class PathManager : MonoBehaviour
     {
         if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), goal) < 0.1f)
         {
-            if (path != null)
+            if (gridAStar != null)
             {
                 // if there are no more waypoints, generate a new goal
-                if (path.Count == 0 && moveAgent)
+                if (moveAgent && path.Count == 0)
                 {
                     // This will define a new goal and fill the path variable with the optimal path
                     moveAgent = (ComputeNewPath() > 0);
                 }
-                // advance to next waypoint
-                goal = getNextWaypoint();
+
+                if (path.Count > 0)
+                {
+                    // advance to next waypoint
+                    goal = getNextWaypoint();
+                }
             }
             else
             {
@@ -98,7 +102,7 @@ public class PathManager : MonoBehaviour
         path = gridAStar.findPath(grid, startNode, goalNode, heuristic, ref found);
 
         // assign start node for recomputing next path
-        if (found > 0)
+        if (found > 0 && path != null && path.Count > 0)
             startNode = path[path.Count - 1];
 
         return found;
@@ -109,6 +113,7 @@ public class PathManager : MonoBehaviour
         // Don't update if path not found
         if (!moveAgent) return goal;
 
+        Debug.Log(path.Count);
         Vector2 waypoint = new Vector2(path[0].getCenter().x, path[0].getCenter().z);
         path[0].density--;
         path.RemoveAt(0);

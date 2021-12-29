@@ -31,7 +31,7 @@ namespace PathFinding
 
             public NodeRecord() { }
 
-            public int id;
+            public uint id;
             public TNode node;
             public NodeRecord connection;   // connection traversed to reach this node 
             public float costSoFar; // cost accumulated to reach this node
@@ -70,7 +70,7 @@ namespace PathFinding
             return visitedNodes.Keys.ToList();
         }
 
-        static int id = 0;
+        uint id = 0;
         public override List<TNode> findPath(TGraph graph, TNode start, TNode end, THeuristic heuristic, ref int found)
         {
             List<TNode> path = new List<TNode>();
@@ -113,13 +113,32 @@ namespace PathFinding
                     {
                         openNodes.Remove(visitedNodes[nodeConnection.toNode]);
 
+                        NodeRecord neighborRecord = new NodeRecord();
+                        neighborRecord.id = id++;
+                        neighborRecord.node = nodeConnection.toNode;
+                        neighborRecord.connection = current;
+                        neighborRecord.costSoFar = cost;  // g(neighbor)
+                        neighborRecord.estimatedTotalCost = heuristic.estimateCost(neighborRecord.node);  // h(neighbor)
+                        neighborRecord.category = NodeRecordCategory.OPEN;
+                        neighborRecord.depth = current.depth + 1;
+
+                        visitedNodes.Remove(nodeConnection.toNode);
+
+                        openNodes.Add(neighborRecord, neighborRecord);
+                        visitedNodes[nodeConnection.toNode] = neighborRecord;
+
                         // change parent, cost and depth
-                        visitedNodes[nodeConnection.toNode].connection = current;
-                        visitedNodes[nodeConnection.toNode].costSoFar = cost;
-                        visitedNodes[nodeConnection.toNode].depth = current.depth + 1;
+                        // visitedNodes[nodeConnection.toNode].connection = current;
+                        // visitedNodes[nodeConnection.toNode].costSoFar = cost;
+                        // visitedNodes[nodeConnection.toNode].depth = current.depth + 1;
+                        // visitedNodes[nodeConnection.toNode].id = id++;
 
                         // add modified node record into sorted list
-                        openNodes.Add(visitedNodes[nodeConnection.toNode], visitedNodes[nodeConnection.toNode]);
+                        // if (!openNodes.ContainsKey(visitedNodes[nodeConnection.toNode])) {
+                        //     // openNodes.Remove(visitedNodes[nodeConnection.toNode]);
+                        //     Debug.Log("Key is already contained: " + visitedNodes[nodeConnection.toNode].id + " || vs " + openNodes.ElementAt(openNodes.IndexOfKey(visitedNodes[nodeConnection.toNode])).Key.id);
+                        // }
+                        // openNodes.Add(visitedNodes[nodeConnection.toNode], visitedNodes[nodeConnection.toNode]);
                     }
 
                     // avoid closed check, since it does not apply to grid?
@@ -135,7 +154,6 @@ namespace PathFinding
                         neighborRecord.estimatedTotalCost = heuristic.estimateCost(neighborRecord.node);  // h(neighbor)
                         neighborRecord.category = NodeRecordCategory.OPEN;
                         neighborRecord.depth = current.depth + 1;
-                        // Debug.Log("Cost so far: " + neighborRecord.costSoFar + "\nEstimated: " + neighborRecord.estimatedTotalCost);
 
                         openNodes.Add(neighborRecord, neighborRecord);
                         visitedNodes[nodeConnection.toNode] = neighborRecord;
@@ -145,7 +163,7 @@ namespace PathFinding
                 if (openNodes.Count == 0)
                 {
                     found = -1;
-                    return path;
+                    return null;
                 }
             }
 
