@@ -158,11 +158,11 @@ MonoBehaviour:
   cellsPerDim: {x: 10, y: 10}
   gridExtents: {x: 30, y: 30}
   obstacleRate: 0.1
-  doSeek: 1
+  doSeek: 0
   seekWeight: 1.5
-  doAvoid: 1
+  doAvoid: 0
   avoidWeight: 4
-  doDynamicAvoid: 1
+  doDynamicAvoid: 0
   dynamicAvoidWeight: 3
   debugGrid: 1
   debugNodeDensity: 1

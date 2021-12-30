@@ -183,8 +183,8 @@ public class Simulator : MonoBehaviour
             }
 
             // velocity vectors might be colinear and opposite. behavior should be different in this special case
-            if (Vector2.Dot(agentVelocity.normalized, XZ(agents[i].velocity.normalized)) < -0.5 && Vector2.Distance(agentPos, XZ(agents[i].transform.position)) < 1f*distanceToGoal
-                && Vector2.Dot((XZ(agents[i].transform.position) - agentPos).normalized, a.transform.forward) > 0.6)
+            if (Vector2.Dot(agentVelocity.normalized, XZ(agents[i].velocity.normalized)) < -0.8 && Vector2.Distance(agentPos, XZ(agents[i].transform.position)) < 1.5f*distanceToGoal
+                && Vector2.Dot((XZ(agents[i].transform.position) - agentPos).normalized, a.transform.forward) > 0.8)
             {
                 closestAgent = agents[i];
                 colinear = true;
