@@ -5,21 +5,23 @@ using UnityEngine;
 public class Agent : MonoBehaviour
 {
     [HideInInspector]
-    public PathManager pathManager;
+    public PathManager pathManager = null;
 
     // [HideInInspector]
     public Vector3 velocity = new Vector3(0, 0, 0);
-
+    public int id;
+    static int counter = 0;
     // Start is called before the first frame update
     void Start()
     {
+        id = counter++;
         pathManager = GetComponent<PathManager>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (pathManager.moveAgent)
+        if (pathManager == null || pathManager.moveAgent)
         {
             GetComponent<Rigidbody>().position += velocity * Time.deltaTime;
         }
@@ -28,6 +30,9 @@ public class Agent : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, new Vector3(pathManager.goal.x, 0, pathManager.goal.y));
+        if (pathManager != null)
+        {
+            Gizmos.DrawLine(transform.position, new Vector3(pathManager.goal.x, 0, pathManager.goal.y));
+        }
     }
 }

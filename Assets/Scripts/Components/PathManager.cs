@@ -49,10 +49,10 @@ public class PathManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        float reachedThr = Mathf.Min(GridGenerator._instance.grid.cellSize.x, GridGenerator._instance.grid.cellSize.y) / 2f;
-        if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), goal) < reachedThr)
+        if (gridAStar != null)
         {
-            if (gridAStar != null)
+            float reachedThr = Mathf.Min(GridGenerator._instance.grid.cellSize.x, GridGenerator._instance.grid.cellSize.y) / 2f;
+            if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), goal) < reachedThr)
             {
                 // if there are no more waypoints, generate a new goal
                 if (moveAgent && path.Count == 0)
@@ -61,13 +61,16 @@ public class PathManager : MonoBehaviour
                     moveAgent = (ComputeNewPath() > 0);
                 }
 
-                if (path.Count > 0)
+                if (moveAgent && path != null && path.Count > 0)
                 {
                     // advance to next waypoint
                     goal = getNextWaypoint();
                 }
             }
-            else
+        }
+        else
+        {
+            if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), goal) < 0.1)
             {
                 Vector3 minBound = plane.bounds.min;
                 Vector3 maxBound = plane.bounds.max;
@@ -75,6 +78,7 @@ public class PathManager : MonoBehaviour
             }
         }
     }
+
 
     int ComputeNewPath()
     {
@@ -128,7 +132,7 @@ public class PathManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (GridGenerator._instance.debugAllAgents)
+        if (GridGenerator._instance != null && GridGenerator._instance.debugAllAgents)
             DrawGizmos();
     }
 

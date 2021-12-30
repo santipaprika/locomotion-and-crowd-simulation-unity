@@ -17,6 +17,8 @@ public class GridGenerator : MonoBehaviour
     public float seekWeight = 1.5f;
     public bool doAvoid = true;
     public float avoidWeight = 1f;
+    public bool doDynamicAvoid = true;
+    public float dynamicAvoidWeight = 1f;
 
     public bool debugGrid = true;
     public bool debugNodeDensity = true;
